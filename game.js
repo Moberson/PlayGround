@@ -116,16 +116,72 @@ function makeWorld() {
 }
 makeWorld();
 
-// A chunky service pistol rides just below the sight line as a true first-person view model.
-const gunRoot = new THREE.Group(); camera.add(gunRoot); gunRoot.position.set(.32, -.31, -.62);
-box(gunRoot, [.18, .16, .55], mats.gun, [0, 0, -.02]);
-box(gunRoot, [.13, .09, .43], mats.gunTrim, [0, .105, -.055]);
-box(gunRoot, [.14, .23, .17], mats.gun, [0, -.17, .11]);
-box(gunRoot, [.095, .2, .14], mats.dark, [0, -.19, .12]);
-box(gunRoot, [.09, .028, .16], mats.gunTrim, [0, -.12, -.3]);
-box(gunRoot, [.035, .045, .12], mats.dark, [0, .14, -.1]);
-const barrel = cylinder(gunRoot, .043, .043, .28, mats.gun, [0, .025, -.37], 10); barrel.rotation.x = Math.PI / 2;
-const muzzle = new THREE.Mesh(new THREE.SphereGeometry(.11, 8, 8), new THREE.MeshBasicMaterial({ color: '#ffd36e', transparent: true, opacity: 0 })); muzzle.position.set(0, .02, -.53); gunRoot.add(muzzle);
+// Silver 1911-inspired starting sidearm, built as a detailed first-person view model.
+const pistolSteel = mat('#b8bdbe', .25, { metalness: .82 });
+const pistolEdge = mat('#e0e1dc', .2, { metalness: .88 });
+const pistolDarkSteel = mat('#34383a', .34, { metalness: .68 });
+const pistolGrip = mat('#202223', .94);
+const pistolGripRidge = mat('#373a3a', .9);
+const gunRoot = new THREE.Group(); camera.add(gunRoot); gunRoot.position.set(.28, -.3, -.9); gunRoot.scale.setScalar(.78); gunRoot.rotation.y = -.08;
+
+// Slide, frame, dust cover, and a long exposed barrel establish the classic 1911 profile.
+box(gunRoot, [.225, .155, .68], pistolSteel, [0, .055, -.095]);
+box(gunRoot, [.205, .075, .49], pistolSteel, [0, -.035, .055]);
+box(gunRoot, [.19, .055, .31], pistolSteel, [0, -.075, -.235]);
+const barrel = cylinder(gunRoot, .052, .052, .58, pistolDarkSteel, [0, .038, -.105], 12); barrel.rotation.x = Math.PI / 2;
+const muzzleCollar = cylinder(gunRoot, .058, .058, .025, pistolEdge, [0, .038, -.405], 12); muzzleCollar.rotation.x = Math.PI / 2;
+
+// Sight blocks and slide serrations catch light as the weapon bobs with the player.
+box(gunRoot, [.065, .035, .055], pistolDarkSteel, [0, .15, -.395]);
+box(gunRoot, [.075, .04, .05], pistolDarkSteel, [0, .15, .205]);
+box(gunRoot, [.025, .009, .032], pistolEdge, [0, .173, -.397]);
+box(gunRoot, [.035, .009, .032], pistolEdge, [0, .173, .207]);
+for (const side of [-1, 1]) {
+  for (let i = 0; i < 4; i++) {
+    const serration = box(gunRoot, [.009, .092, .012], pistolDarkSteel, [side * (.083 + i * .018), .055, .249], false);
+    serration.rotation.z = side * -.08;
+  }
+}
+// Ejection port and slide stop details on the visible side of the slide.
+box(gunRoot, [.105, .055, .008], pistolDarkSteel, [-.005, .065, .249], false);
+box(gunRoot, [.072, .012, .012], pistolEdge, [-.005, .085, .255], false);
+const slideStop = cylinder(gunRoot, .018, .018, .018, pistolDarkSteel, [.105, -.035, .255], 10); slideStop.rotation.x = Math.PI / 2;
+
+// Angled checkered grip panels, retaining screws, and a dark magazine base.
+const grip = new THREE.Group(); grip.position.set(0, -.145, .105); grip.rotation.x = -.3; gunRoot.add(grip);
+box(grip, [.18, .37, .16], pistolDarkSteel, [0, -.015, 0]);
+box(grip, [.174, .315, .016], pistolGrip, [0, -.025, .09], false);
+for (let i = 0; i < 7; i++) {
+  const ridge = box(grip, [.142, .008, .004], pistolGripRidge, [0, -.14 + i * .038, .101], false);
+  ridge.rotation.z = -.48;
+}
+for (const y of [-.135, .075]) {
+  const screw = cylinder(grip, .014, .014, .008, pistolEdge, [0, y, .103], 12); screw.rotation.x = Math.PI / 2;
+  const slot = box(grip, [.014, .0025, .003], pistolDarkSteel, [0, y, .109], false); slot.rotation.z = -.55;
+}
+box(gunRoot, [.19, .04, .17], pistolDarkSteel, [0, -.345, .14]);
+box(gunRoot, [.195, .012, .16], pistolDarkSteel, [0, -.369, .14]);
+
+// Open trigger guard, curved trigger, beavertail, and exposed hammer.
+const guardPath = new THREE.CatmullRomCurve3([
+  new THREE.Vector3(-.085, -.045, .19), new THREE.Vector3(-.105, -.105, .19),
+  new THREE.Vector3(-.095, -.19, .19), new THREE.Vector3(-.055, -.22, .19),
+  new THREE.Vector3(.055, -.22, .19), new THREE.Vector3(.09, -.18, .19),
+  new THREE.Vector3(.085, -.055, .19),
+]);
+const triggerGuard = new THREE.Mesh(new THREE.TubeGeometry(guardPath, 20, .012, 7, false), pistolSteel);
+triggerGuard.castShadow = true; gunRoot.add(triggerGuard);
+const trigger = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([
+  new THREE.Vector3(-.012, -.035, .205), new THREE.Vector3(-.018, -.09, .205),
+  new THREE.Vector3(.005, -.13, .205), new THREE.Vector3(.028, -.135, .205),
+]), 8, .009, 6, false), pistolDarkSteel);
+gunRoot.add(trigger);
+box(gunRoot, [.17, .045, .12], pistolSteel, [0, .095, .205]);
+const hammer = box(gunRoot, [.075, .07, .045], pistolDarkSteel, [0, .145, .265]); hammer.rotation.x = -.25;
+box(gunRoot, [.085, .025, .065], pistolSteel, [0, .155, .245]);
+const safety = cylinder(gunRoot, .022, .022, .022, pistolEdge, [.112, .015, .225], 10); safety.rotation.x = Math.PI / 2;
+
+const muzzle = new THREE.Mesh(new THREE.SphereGeometry(.11, 8, 8), new THREE.MeshBasicMaterial({ color: '#ffd36e', transparent: true, opacity: 0 })); muzzle.position.set(0, .038, -.445); gunRoot.add(muzzle);
 const muzzleLight = new THREE.PointLight('#ffb74f', 0, 3); muzzleLight.position.copy(muzzle.position); gunRoot.add(muzzleLight);
 
 function makeEnemy(x, z) {
