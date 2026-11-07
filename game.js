@@ -35,6 +35,8 @@ let touchFiring = false;
 const el = (id) => document.getElementById(id);
 const screens = { title: el('title-screen'), pause: el('pause-screen'), shop: el('shop-screen'), gameover: el('gameover-screen') };
 const hud = el('hud');
+const isTouchDevice = window.matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0;
+function syncTouchControls() { if (!isTouchDevice || state !== 'playing') touchFiring = false; el('touch-controls').classList.toggle('hidden', !isTouchDevice || state !== 'playing'); }
 const mat = (color, roughness = .86, extra = {}) => new THREE.MeshStandardMaterial({ color, roughness, ...extra });
 const mats = {
   earth: mat('#5c5546'), earth2: mat('#69634f'), concrete: mat('#777565'), dark: mat('#29312b'), metal: mat('#444940', .52, { metalness: .48 }), rust: mat('#825a43'), light: mat('#d5c596', .4, { emissive: '#b08346', emissiveIntensity: .35 }),
@@ -236,10 +238,10 @@ function startRound() {
   el('objective-title').textContent = 'STAY ALIVE'; el('objective-copy').textContent = 'Clear the perimeter.';
   Object.values(screens).forEach(s => s.classList.remove('visible'));
   hud.classList.remove('hidden');
-  el('touch-controls').classList.toggle('hidden', !window.matchMedia('(max-width: 700px)').matches);
+  syncTouchControls();
   updateHud(); requestLock();
 }
-function requestLock() { if (document.pointerLockElement !== canvas) canvas.requestPointerLock?.(); }
+function requestLock() { if (!isTouchDevice && document.pointerLockElement !== canvas) canvas.requestPointerLock?.(); }
 function finishRound() {
   state = 'shop'; document.exitPointerLock?.(); el('touch-controls').classList.add('hidden');
   cash += 75 + round * 10; reserve += 8;
@@ -409,8 +411,8 @@ document.addEventListener('keydown', (event) => {
   if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.code)) event.preventDefault();
   keys.add(event.code);
   if (event.code === 'Escape') {
-    if (state === 'playing' && document.pointerLockElement === canvas) { state = 'paused'; el('touch-controls').classList.add('hidden'); screens.pause.classList.add('visible'); }
-    else if (state === 'paused') { state = 'playing'; screens.pause.classList.remove('visible'); el('touch-controls').classList.toggle('hidden', !window.matchMedia('(max-width: 700px)').matches); requestLock(); }
+    if (state === 'playing' && (isTouchDevice || document.pointerLockElement === canvas)) { state = 'paused'; syncTouchControls(); screens.pause.classList.add('visible'); }
+    else if (state === 'paused') { state = 'playing'; screens.pause.classList.remove('visible'); syncTouchControls(); requestLock(); }
   }
   if (event.code === 'KeyR') reload();
 });
@@ -445,16 +447,17 @@ document.addEventListener('mousemove', (event) => {
 });
 document.addEventListener('pointerlockchange', () => {
   const locked = document.pointerLockElement === canvas;
-  el('lock-prompt').classList.toggle('hidden', locked || state !== 'playing');
-  if (!locked && state === 'playing') { state = 'paused'; screens.pause.classList.add('visible'); }
+  el('lock-prompt').classList.toggle('hidden', isTouchDevice || locked || state !== 'playing');
+  if (!isTouchDevice && !locked && state === 'playing') { state = 'paused'; screens.pause.classList.add('visible'); }
 });
 canvas.addEventListener('mousedown', (event) => {
-  if (event.button !== 0) return;
+  if (isTouchDevice || event.button !== 0) return;
   if (state === 'playing' && document.pointerLockElement === canvas) shoot();
   else if (state === 'playing') requestLock();
 });
 el('start-button').addEventListener('click', () => { screens.title.classList.remove('visible'); resetGame(); });
-el('resume-button').addEventListener('click', () => { screens.pause.classList.remove('visible'); state = 'playing'; el('touch-controls').classList.toggle('hidden', !window.matchMedia('(max-width: 700px)').matches); requestLock(); });
+el('resume-button').addEventListener('click', () => { screens.pause.classList.remove('visible'); state = 'playing'; syncTouchControls(); requestLock(); });
+el('pause-touch').addEventListener('pointerdown', event => { event.preventDefault(); if (state !== 'playing') return; state = 'paused'; syncTouchControls(); screens.pause.classList.add('visible'); });
 el('next-round-button').addEventListener('click', startRound);
 el('restart-button').addEventListener('click', () => { screens.gameover.classList.remove('visible'); resetGame(); });
 el('crosshair').classList.toggle('precise', redDot);
