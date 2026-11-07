@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#101611" />
+  <link rel="icon" href="data:," />
+  <title>LAST LIGHT — Survival Protocol</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./style.css" />
+  <script type="importmap">
+    {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js"}}
+  </script>
+</head>
+<body>
+  <main id="game-shell">
+    <canvas id="game-canvas" aria-label="3D survival arena"></canvas>
+    <div class="grain" aria-hidden="true"></div>
+    <div class="vignette" aria-hidden="true"></div>
+
+    <section id="title-screen" class="screen visible">
+      <div class="title-topline"><span class="signal-dot"></span> EMERGENCY BROADCAST <span class="topline-right">SECTOR 09&nbsp; / &nbsp;NIGHT 01</span></div>
+      <div class="title-content">
+        <p class="eyebrow">THE CITY WENT DARK. YOU DIDN'T.</p>
+        <h1>LAST<span>LIGHT</span></h1>
+        <div class="title-rule"><span></span><b>AFTER THE FALL, EVERY ROUND COUNTS</b><span></span></div>
+        <p class="intro-copy">Hold the perimeter. Make every bullet count.<br />Get paid. Get ready. Don't let them through.</p>
+        <button id="start-button" class="primary-button"><span>ENTER THE ZONE</span><b>→</b></button>
+        <div class="control-hint"><span>W A S D</span> MOVE <i></i><span>MOUSE</span> AIM <i></i><span>LMB</span> FIRE</div>
+      </div>
+      <div class="title-bottom"><span>FIELD MANUAL <b>01—04</b></span><span>NO EXTRACTION AVAILABLE</span><span>© NORTHSTAR SECURITY</span></div>
+    </section>
+
+    <section id="hud" class="hud hidden" aria-live="polite">
+      <div class="hud-top">
+        <div class="brand-mark"><span class="brand-symbol">L<span>+</span></span><span>LAST LIGHT<small>PERIMETER DEFENSE</small></span></div>
+        <div class="round-panel"><span class="hud-label">CURRENT OPERATION</span><strong>ROUND <b id="round-value">01</b></strong><div class="wave-progress"><span id="wave-progress"></span></div><small id="wave-status">THREATS INBOUND</small></div>
+        <div class="cash-panel"><span class="hud-label">FIELD CREDITS</span><strong><i>$</i><b id="cash-value">000</b></strong><small>+ $25 PER ELIMINATION</small></div>
+      </div>
+      <div class="threat-label"><span class="threat-line"></span><span><i class="signal-dot"></i> HOSTILES <b id="enemy-count">00</b></span><span class="threat-line"></span></div>
+      <div id="hit-marker" class="hit-marker">×</div>
+      <div id="crosshair" class="crosshair"><i></i><i></i><i></i><i></i><b></b></div>
+      <div class="hud-bottom">
+        <div class="health-panel"><div class="stat-icon">+</div><div class="stat-copy"><span class="hud-label">VITALS</span><strong><b id="health-value">100</b><small> / 100</small></strong><div class="health-track"><span id="health-fill"></span></div></div></div>
+        <div class="objective"><span class="objective-icon">⌖</span><span><b id="objective-title">STAY ALIVE</b><small id="objective-copy">Clear the perimeter.</small></span></div>
+        <div class="ammo-panel"><div class="ammo-copy"><span class="hud-label">SIDEARM <em id="weapon-label">M9 SERVICE</em></span><strong><b id="ammo-value">12</b><i>/</i><small id="reserve-value">48</small></strong></div><div class="ammo-glyph"><span></span><span></span><span></span><span></span><span></span></div></div>
+      </div>
+      <div id="toast" class="toast"></div>
+      <div id="damage-flash" class="damage-flash"></div>
+    </section>
+
+    <section id="pause-screen" class="screen modal-screen">
+      <div class="modal-card pause-card"><p class="eyebrow">FIELD STATUS // PAUSED</p><h2>TAKE A<br /><span>BREATHER.</span></h2><p>The dead don't get tired. You do.</p><button id="resume-button" class="primary-button"><span>BACK TO IT</span><b>→</b></button><div class="modal-foot">ESC TO RESUME <i>•</i> KEEP YOUR HEAD DOWN</div></div>
+    </section>
+
+    <section id="shop-screen" class="screen modal-screen">
+      <div class="shop-wrap">
+        <div class="shop-header"><div><p class="eyebrow">PERIMETER SECURE // INTERMISSION</p><h2>MAKE IT<br /><span>COUNT.</span></h2></div><div class="shop-round"><span>NEXT UP</span><b>ROUND <i id="next-round">02</i></b><small>THEY'RE GETTING CLOSER</small></div></div>
+        <div class="shop-divider"><span></span><b>FIELD ARMORY</b><span></span><strong>$ <i id="shop-cash">000</i></strong></div>
+        <div id="upgrade-list" class="upgrade-list"></div>
+        <div class="shop-footer"><div><span class="signal-dot"></span> SPEND WISELY. NO REFUNDS.</div><button id="next-round-button" class="primary-button"><span>BEGIN NEXT ROUND</span><b>→</b></button></div>
+      </div>
+    </section>
+
+    <section id="gameover-screen" class="screen modal-screen">
+      <div class="modal-card gameover-card"><p class="eyebrow">SIGNAL LOST // PERIMETER BREACHED</p><h2>NOT<br /><span>TONIGHT.</span></h2><p id="final-stats">You held the line through 0 rounds.</p><button id="restart-button" class="primary-button"><span>RUN IT BACK</span><b>↻</b></button><div class="modal-foot">THEY ALWAYS COME BACK</div></div>
+    </section>
+
+    <div id="touch-look" aria-hidden="true"></div>
+    <div id="touch-controls" class="hidden" aria-label="Touch controls">
+      <div id="move-pad" class="move-pad"><span></span><i>MOVE</i></div>
+      <button id="fire-touch" class="fire-touch" aria-label="Fire">FIRE</button>
+      <button id="reload-touch" class="reload-touch" aria-label="Reload">↻</button>
+      <small class="touch-aim-label">DRAG TO AIM</small>
+    </div>
+    <div id="lock-prompt" class="lock-prompt hidden"><span>CLICK TO RETURN TO THE FIGHT</span></div>
+  </main>
+  <script type="module" src="./game.js"></script>
+</body>
+</html>
