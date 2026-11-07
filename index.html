@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="theme-color" content="#101510" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23131713'/%3E%3Cpath d='M18 12h31v10H30v8h16v10H30v12H18z' fill='%23d5f064'/%3E%3C/svg%3E" />
+  <title>FIELDWORK — Tactical FPS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main id="game-shell">
+    <canvas id="game-canvas" aria-label="3D first-person shooter game"></canvas>
+    <div class="film-grain"></div>
+    <div class="vignette"></div>
+
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Fieldwork home"><span class="brand-mark">F</span><span>FIELD<span class="brand-light">WORK</span></span></a>
+      <div class="top-center"><span class="live-dot"></span><span id="top-status">TRAINING SIMULATION</span><span class="top-separator">/</span><span id="top-map">THE DEPOT</span></div>
+      <button class="icon-button" id="sound-button" title="Toggle sound" aria-label="Toggle sound"><span id="sound-icon">♪</span></button>
+    </header>
+
+    <section class="game-hud" id="game-hud" aria-live="polite">
+      <div class="match-card">
+        <span class="eyebrow" id="mode-label">FREE FOR ALL</span>
+        <div class="match-score"><span id="player-score">00</span><span class="score-divider">:</span><span id="bot-score">00</span></div>
+        <div class="score-caption"><span>YOU</span><span>RIVALS</span></div>
+        <div class="match-progress"><i id="score-progress"></i></div>
+        <div class="match-meta"><span>FIRST TO 15</span><span id="match-clock">05:00</span></div>
+      </div>
+      <div class="objective"><span class="objective-icon">✳</span><div><span class="eyebrow">OBJECTIVE</span><strong>OUTPLAY THE FIELD</strong></div><span class="objective-count" id="objective-count">0 / 15</span></div>
+      <div class="kill-feed" id="kill-feed"></div>
+      <div class="hit-marker" id="hit-marker"><i></i><i></i><i></i><i></i></div>
+      <div class="damage-flash" id="damage-flash"></div>
+      <div class="crosshair" id="crosshair"><i></i><i></i><b></b></div>
+      <div class="ammo-panel"><span class="eyebrow">M4 / 5.56</span><div class="ammo-main"><strong id="ammo-count">30</strong><span>/ <span id="reserve-count">120</span></span><span class="ammo-glyph">▰</span></div><div class="ammo-label">FULL METAL JACKET</div></div>
+      <div class="health-panel"><div class="health-symbol">✚</div><div class="health-copy"><strong id="health-count">100</strong><span>VITALS</span></div><div class="health-track"><i id="health-bar"></i></div></div>
+      <div class="compass"><span>W</span><i></i><strong>N</strong><i></i><span>E</span><i></i><span>S</span><b id="compass-heading">N 000°</b></div>
+      <div class="map-chip"><span class="map-chip-dot"></span><span id="hud-map">THE DEPOT</span><span id="map-index">01 / 06</span></div>
+      <div class="toast" id="toast"></div>
+      <div class="reload-indicator" id="reload-indicator">RELOADING <i></i><i></i><i></i></div>
+      <div class="controls-hint">WASD <span>MOVE</span><b>·</b> SHIFT <span>SPRINT</span><b>·</b> SPACE <span>JUMP</span><b>·</b> R <span>RELOAD</span><b>·</b> ESC <span>MENU</span></div>
+    </section>
+
+    <section class="screen" id="menu-screen">
+      <div class="menu-layout">
+        <div class="menu-copy">
+          <div class="season-tag"><span></span> SEASON 01 <b>·</b> PLAY YOUR WAY</div>
+          <h1>DROP<br /><em>IN.</em></h1>
+          <p class="hero-copy">Six battlegrounds. One rule.<br />Keep moving.</p>
+          <div class="menu-actions"><button class="primary-button" id="play-button"><span>DEPLOY</span><b>↗</b></button><button class="secondary-button" id="how-button">HOW TO PLAY <span>↓</span></button></div>
+          <div class="hero-foot"><span class="hero-foot-line"></span><span>NO SQUAD? NO PROBLEM.</span></div>
+        </div>
+        <div class="map-select">
+          <div class="map-select-head"><div><span class="eyebrow">SELECT YOUR THEATER</span><h2>THE BATTLEFIELD</h2></div><span class="map-total">06 <i>MAPS</i></span></div>
+          <div class="map-list" id="map-list"></div>
+          <div class="map-detail"><span class="detail-mark">✳</span><div><span class="eyebrow">ROTATION UPDATE</span><p>Every map is built for <strong>close calls</strong> and clever cover.</p></div><span class="detail-arrow">↗</span></div>
+        </div>
+      </div>
+      <div class="menu-bottom"><span>FIELDWORK <i>·</i> COMBAT SIMULATOR</span><span>BUILD 01.06 <i>·</i> ALL SYSTEMS NOMINAL</span></div>
+    </section>
+
+    <section class="pause-screen hidden" id="pause-screen">
+      <div class="pause-card"><span class="eyebrow">FIELDWORK / PAUSED</span><h2>TAKE A<br /><em>BREATHER.</em></h2><p>The field will still be here.</p><button class="primary-button" id="resume-button"><span>BACK IN</span><b>↗</b></button><button class="pause-link" id="return-button">CHANGE MAP / QUIT</button></div>
+    </section>
+    <div class="mobile-controls" id="mobile-controls"><div class="touch-stick" id="touch-stick"><i></i></div><div class="touch-actions"><button id="touch-jump">↑</button><button id="touch-fire">◎</button><button id="touch-reload">↻</button></div></div>
+  </main>
+  <script type="module" src="game.js"></script>
+</body>
+</html>
