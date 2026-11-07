@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="theme-color" content="#81d9ff" />
+  <title>Toadstool Trail — Mushroom Kingdom Defense</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;600;700;800&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="game-shell">
+    <section class="world" aria-label="3D tower defense battlefield">
+      <div id="game"></div>
+      <div class="topbar">
+        <div class="brand"><div class="brand-icon">🍄</div><div><div class="eyebrow">MUSHROOM KINGDOM</div><h1>Toadstool Trail</h1></div></div>
+        <div class="top-actions"><button id="soundBtn" class="icon-btn" title="Toggle sound">♪</button><button id="helpBtn" class="icon-btn" title="How to play">?</button></div>
+      </div>
+      <div class="world-hint" id="worldHint"><span class="hint-dot"></span> Choose a tower, then tap a grassy tile to build</div>
+      <div id="toast" class="toast"></div>
+      <div id="gameOver" class="game-over hidden"><div class="result-card"><div class="result-emoji" id="resultEmoji">🏰</div><p class="eyebrow">THE KINGDOM REMEMBERS</p><h2 id="resultTitle">Trail defended!</h2><p id="resultText">You kept the trail safe.</p><button class="primary-btn" id="restartBtn">Play again <span>↻</span></button></div></div>
+      <div id="helpModal" class="modal hidden"><div class="modal-card"><button class="close-btn" id="closeHelp">×</button><p class="eyebrow">QUICK FIELD GUIDE</p><h2>Keep the trail safe</h2><div class="guide-row"><span>①</span><p><b>Build</b> towers on grassy tiles beside the winding path.</p></div><div class="guide-row"><span>②</span><p><b>Defend</b> — towers automatically target the nearest baddie.</p></div><div class="guide-row"><span>③</span><p><b>Upgrade</b> or sell a tower by selecting it. Earn coins for every baddie!</p></div><div class="guide-row"><span>④</span><p><b>Survive</b> all 8 waves. Don't let too many reach the pipe!</p></div><button class="primary-btn" id="gotIt">Got it! <span>✦</span></button></div></div>
+    </section>
+    <aside class="sidebar">
+      <div class="status-row"><div class="stat-pill coins"><span>🪙</span><div><small>COINS</small><strong id="coins">180</strong></div></div><div class="stat-pill lives"><span>❤️</span><div><small>HEARTS</small><strong id="lives">10</strong></div></div></div>
+      <div class="wave-card"><div class="wave-top"><div><small>WAVE</small><strong><span id="waveNum">0</span><i>/ 8</i></strong></div><div class="wave-badge" id="waveBadge">PREPARE</div></div><div class="progress-track"><div id="waveProgress"></div></div><div class="wave-foot"><span id="waveMessage">The trail is quiet… for now.</span><span id="enemyCount">—</span></div></div>
+      <div class="section-title"><div><span class="eyebrow">YOUR DEFENSE</span><h2>Pick a tower</h2></div><span class="tiny-star">✦</span></div>
+      <div class="tower-list">
+        <button class="tower-card selected" data-tower="pea"><span class="tower-icon pea-icon">🌱</span><span class="tower-info"><b>Pea Popper</b><small>Quick & reliable</small></span><span class="tower-cost">🪙 60</span><span class="card-select">✓</span></button>
+        <button class="tower-card" data-tower="fire"><span class="tower-icon fire-icon">🔥</span><span class="tower-info"><b>Fire Flower</b><small>Splash damage</small></span><span class="tower-cost">🪙 100</span><span class="card-select">✓</span></button>
+        <button class="tower-card" data-tower="star"><span class="tower-icon star-icon">⭐</span><span class="tower-info"><b>Super Star</b><small>Long range & mighty</small></span><span class="tower-cost">🪙 140</span><span class="card-select">✓</span></button>
+      </div>
+      <div class="selection-panel" id="selectionPanel"><div class="empty-selection"><span>👆</span><div><b>Tap a tower to build</b><small>Then pick a grassy tile on the trail</small></div></div></div>
+      <button id="waveBtn" class="primary-btn wave-button"><span class="play-icon">▶</span><span id="waveBtnText">Start wave 1</span><span class="btn-arrow">→</span></button>
+      <button id="speedBtn" class="speed-btn"><span>⏩</span> Game speed <b id="speedLabel">1×</b></button>
+      <div class="sidebar-footer"><span>🌼</span> A little courage goes a long way.</div>
+    </aside>
+  </main>
+  <script type="module" src="game.js"></script>
+</body>
+</html>
