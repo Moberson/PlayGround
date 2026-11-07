@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#101611" />
   <link rel="icon" href="data:," />
   <title>LAST LIGHT — Survival Protocol</title>
@@ -73,8 +73,10 @@
       <div id="move-pad" class="move-pad"><span></span><i>MOVE</i></div>
       <button id="fire-touch" class="fire-touch" aria-label="Fire">FIRE</button>
       <button id="reload-touch" class="reload-touch" aria-label="Reload">↻</button>
+      <button id="pause-touch" class="pause-touch" aria-label="Pause">Ⅱ</button>
       <small class="touch-aim-label">DRAG TO AIM</small>
     </div>
+    <div class="orientation-prompt" role="status"><span>↻</span><strong>ROTATE TO LANDSCAPE</strong><small>LAST LIGHT is designed for landscape play.</small></div>
     <div id="lock-prompt" class="lock-prompt hidden"><span>CLICK TO RETURN TO THE FIGHT</span></div>
   </main>
   <script type="module" src="./game.js"></script>
