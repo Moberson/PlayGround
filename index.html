@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <meta name="theme-color" content="#81dbff" />
+  <title>Turbo Toad Rally</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main id="game">
+    <div id="scene"></div>
+    <div class="sky-glow"></div>
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark">✦</span><span>TURBO<span class="brand-light"> TOAD</span></span></div>
+      <div class="race-tag"><span class="live-dot"></span> MUSHROOM MEADOWS <span class="tag-divider">/</span> GRAND PRIX</div>
+      <button class="sound-btn" id="soundBtn" aria-label="Toggle sound">♫ <span>SOUND ON</span></button>
+    </header>
+    <section class="race-hud" id="raceHud" aria-live="polite">
+      <div class="hud-card position"><span class="hud-label">POSITION</span><div><strong id="position">1</strong><small id="ordinal">ST</small><span class="of">/ 4</span></div></div>
+      <div class="hud-card lap"><span class="hud-label">LAP</span><div><strong id="lap">1</strong><span class="of">/ 3</span></div><div class="lap-track"><i id="lapFill"></i></div></div>
+      <div class="hud-card timer"><span class="hud-label">RACE TIME</span><strong id="timer">00:00.0</strong></div>
+      <div class="item-slot" id="itemSlot"><span class="item-caption">ITEM</span><div class="item-icon" id="itemIcon">?</div><span class="item-hint" id="itemHint">PRESS SPACE</span></div>
+    </section>
+    <div class="speed-wrap"><div class="speedometer"><strong id="speed">0</strong><span>KM/H</span></div><div class="speed-bar"><i id="speedFill"></i></div></div>
+    <div class="controls-hint" id="controlsHint"><span class="key">W</span><span class="key">A</span><span class="key">S</span><span class="key">D</span><span class="hint-copy">DRIVE</span><span class="hint-sep">·</span><span class="key key-wide">SPACE</span><span class="hint-copy">USE ITEM</span></div>
+    <div class="toast" id="toast"></div>
+    <div class="countdown" id="countdown"><span>3</span></div>
+    <div class="start-screen" id="startScreen">
+      <div class="start-card">
+        <div class="eyebrow"><span>✦</span> THE RACE IS ON <span>✦</span></div>
+        <h1>READY,<br><em>RACER?</em></h1>
+        <p>Drift the meadow. Grab a power-up.<br>Make every lap count.</p>
+        <div class="character-select"><div class="avatar">🐸</div><div><b>TOADSTOOL</b><small>THE LITTLE SPEEDSTER</small></div><span class="select-arrow">›</span></div>
+        <button class="go-button" id="startBtn">START YOUR ENGINES <span>→</span></button>
+        <div class="start-foot">3 LAPS <b>·</b> 4 RACERS <b>·</b> 1 TROPHY</div>
+      </div>
+      <div class="start-badge"><span>🏁</span><br>RACE<br>DAY!</div>
+    </div>
+    <div class="finish-screen" id="finishScreen"><div class="finish-card"><div class="finish-cup">🏆</div><div class="eyebrow">CHECKERED FLAG</div><h2 id="finishTitle">RACE COMPLETE!</h2><p id="finishText"></p><button class="go-button" id="againBtn">RACE AGAIN <span>↻</span></button></div></div>
+    <div class="touch-controls" id="touchControls"><div class="steering"><button data-key="ArrowLeft">◀</button><button data-key="ArrowRight">▶</button></div><button class="touch-item" id="touchItem">?</button><div class="pedals"><button data-key="ArrowDown">BRAKE</button><button data-key="ArrowUp">GO!</button></div></div>
+    <footer class="bottom-note"><span>✦</span> KEEP IT ON THE TRACK <span>✦</span></footer>
+  </main>
+  <script type="module" src="game.js"></script>
+</body>
+</html>
