@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#070b16">
+  <title>VOID RUNNER // Sector 09</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Void Runner home"><span class="brand-mark">V<span>R</span></span><span class="brand-name">VOID<span>RUNNER</span></span></a>
+      <div class="sector-label"><span class="live-dot"></span> FRONTIER SECTOR <b>09</b></div>
+      <div class="top-actions"><span class="pilot-tag"><span class="pilot-icon">✦</span> PILOT <b>ROOKIE</b></span><button class="icon-btn" id="soundBtn" aria-label="Toggle sound">♫</button></div>
+    </header>
+    <section class="game-layout">
+      <div class="game-column">
+        <div class="section-heading"><div><p class="eyebrow">DEEP SPACE / COMBAT SIMULATION</p><h1>THE OUTER <span>RIM</span></h1></div><div class="wave-chip"><span class="chip-label">WAVE</span><strong id="waveNum">01</strong><span class="wave-divider">/</span><span id="waveTotal">∞</span></div></div>
+        <div class="arena-wrap">
+          <canvas id="gameCanvas" aria-label="Space combat game"></canvas>
+          <div class="arena-vignette"></div>
+          <div class="arena-hud"><div class="hud-left"><span class="hud-label">SCORE</span><strong id="scoreText">000000</strong></div><div class="hud-center" id="waveBanner"><span>INCOMING</span><b>HOSTILES</b></div><div class="hud-right"><span class="hud-label">THREATS</span><strong id="enemyCount">—</strong></div></div>
+          <div class="crosshair" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+          <div class="center-modal" id="startModal"><div class="modal-kicker">PILOT, YOUR SHIP IS READY</div><h2>OWN THE <span>VOID.</span></h2><p>Clear the sector. Salvage the wreckage.<br>Build a ship they can't touch.</p><button class="primary-btn" id="startBtn">LAUNCH MISSION <span>→</span></button><div class="modal-hint"><kbd>WASD</kbd> MOVE <span>·</span> <kbd>SPACE</kbd> FIRE</div></div>
+          <div class="gameover-modal hidden" id="gameOverModal"><div class="modal-kicker">SIGNAL LOST</div><h2>SHIP <span>DESTROYED</span></h2><p>Your run is over, pilot. Your Ship Parts are safe.</p><div class="run-stats"><div><small>FINAL SCORE</small><b id="finalScore">0</b></div><div><small>WAVE REACHED</small><b id="finalWave">01</b></div></div><button class="primary-btn" id="retryBtn">REDEPLOY <span>↻</span></button></div>
+          <div class="pause-badge hidden" id="pauseBadge">PAUSED <span>·</span> PRESS P TO RESUME</div>
+          <div class="toast" id="toast"></div>
+        </div>
+        <div class="battle-footer"><div class="objective"><span class="objective-icon">◎</span><span><b id="objectiveTitle">MISSION BRIEFING</b><small id="objectiveText">Destroy the hostile fleet and collect their salvage.</small></span></div><div class="controls-legend"><span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> MOVE</span><span><kbd>SPACE</kbd> FIRE</span><span><kbd>P</kbd> PAUSE</span></div></div>
+      </div>
+      <aside class="sidebar">
+        <section class="pilot-card"><div class="card-head"><span class="eyebrow">FLIGHT SYSTEMS</span><span class="status-pill"><i></i> ONLINE</span></div><div class="ship-portrait"><div class="portrait-grid"></div><div class="ship-glow"></div><svg viewBox="0 0 170 128" class="ship-art" aria-label="Your ship"><path d="M84 9 101 56 145 84 106 79 96 114 84 103 72 114 62 79 23 84 67 56Z" fill="#13283d" stroke="#69f5e1" stroke-width="2"/><path d="m84 21 9 39-9 24-9-24Z" fill="#63ffe0"/><path d="m65 66-29 12 28-4M103 66l29 12-28-4" fill="none" stroke="#ffb36b" stroke-width="3"/><path d="m75 102-4 14m28-14 4 14" stroke="#ff6d9d" stroke-width="4" stroke-linecap="round"/></svg><span class="ship-label">V-01 / WAYFARER</span></div><div class="vitals"><div class="vital-row"><span>HULL INTEGRITY</span><b id="healthNum">100 <small>/ 100</small></b></div><div class="meter"><i id="healthBar"></i></div><div class="vital-row shield-label"><span>SHIELD CAPACITY</span><b id="shieldNum">50 <small>/ 50</small></b></div><div class="meter shield-meter"><i id="shieldBar"></i></div></div></section>
+        <section class="salvage-card"><div class="salvage-icon">⬡</div><div><span class="eyebrow">SALVAGED CURRENCY</span><div class="currency"><strong id="partsNum">0</strong><span>SHIP PARTS</span></div></div><button class="shop-jump" id="shopJump" title="Open upgrades">↗</button></section>
+        <section class="upgrade-panel" id="upgradePanel"><div class="upgrade-title"><div><span class="eyebrow">THE HANGAR</span><h2>SHIP <span>UPGRADES</span></h2></div><span class="hangar-tag">PERMANENT</span></div><p class="upgrade-subtitle">Spend Ship Parts to rebuild your loadout.</p><div class="upgrade-list" id="upgradeList"></div><div class="hangar-foot"><span>UPGRADES SAVED AUTOMATICALLY</span><span class="save-dot">●</span></div></section>
+        <div class="sidebar-tip"><span class="tip-spark">✦</span><p><b>FIELD INTEL</b><br>Some enemies carry <em>salvage</em> and combat boosts. Fly through them to collect.</p></div>
+      </aside>
+    </section>
+    <footer class="bottom-bar"><span>© 2094 WAYFARER SYSTEMS</span><span>FLIGHT RECORDER <b>ACTIVE</b></span><span>BUILD 0.9.4 <i>◆</i></span></footer>
+  </main>
+  <div class="touch-controls" id="touchControls"><div class="dpad"><button data-key="ArrowUp" aria-label="Move up">▲</button><div><button data-key="ArrowLeft" aria-label="Move left">◀</button><button data-key="ArrowDown" aria-label="Move down">▼</button><button data-key="ArrowRight" aria-label="Move right">▶</button></div></div><button class="touch-fire" id="touchFire">FIRE</button></div>
+  <script src="game.js"></script>
+</body>
+</html>
