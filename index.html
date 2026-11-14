@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#101611" />
+  <title>Verdant — Tower Defense</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Verdant home"><span class="brand-mark">✳</span><span>verdant<span class="brand-period">.</span></span></a>
+      <nav class="main-nav" aria-label="Main navigation">
+        <button class="nav-item active" data-view="play"><span>◈</span> Play</button>
+        <button class="nav-item" data-view="editor"><span>⌘</span> Level designer</button>
+        <button class="nav-item" data-view="community"><span>◎</span> Community <span class="nav-count">12</span></button>
+      </nav>
+      <div class="profile"><span class="online-dot"></span><span>FIELD JOURNAL</span><div class="avatar">A</div></div>
+    </header>
+
+    <main>
+      <section class="intro-row">
+        <div>
+          <div class="eyebrow"><span class="eyebrow-line"></span> THE WILDERNESS IS WAKING</div>
+          <h1 id="page-title">Defend the <em>grove.</em></h1>
+          <p id="page-subtitle">A quiet forest. A winding trail. One last stand.</p>
+        </div>
+        <div class="season-tag"><span class="season-icon">✦</span><div><b>SEASON 04</b><small>THE OVERGROWTH</small></div></div>
+      </section>
+
+      <section class="game-layout" id="game-view">
+        <div class="board-column">
+          <div class="game-toolbar">
+            <div class="map-label"><span class="map-pin">⌖</span><div><b id="current-map-name">Mosslight Crossing</b><small id="current-map-meta">FOREST · STANDARD · 10 WAVES</small></div></div>
+            <div class="toolbar-actions"><span class="live-label"><i></i> LIVE MAP</span><button class="icon-btn" id="sound-btn" title="Toggle sound" aria-label="Toggle sound">♫</button><button class="icon-btn" id="fullscreen-btn" title="Fullscreen" aria-label="Fullscreen">⛶</button></div>
+          </div>
+          <div class="board-frame">
+            <div class="board-glow"></div>
+            <canvas id="game-canvas" width="960" height="600" aria-label="Tower defense map"></canvas>
+            <div class="canvas-badge"><span>✦</span> MOSS COUNTRY <span class="badge-divider">/</span> 01</div>
+            <div class="canvas-coords">N 42° 18' · E 08° 54'</div>
+            <div id="toast" class="toast" aria-live="polite"></div>
+          </div>
+          <div class="board-footer">
+            <div class="legend"><span><i class="legend-path"></i> Enemy route</span><span><i class="legend-range"></i> Tower range</span><span><i class="legend-enemy"></i> Invaders</span></div>
+            <div class="controls-hint"><kbd>Click</kbd> place &nbsp;·&nbsp; <kbd>Space</kbd> pause</div>
+          </div>
+        </div>
+
+        <aside class="side-panel" id="side-panel">
+          <div class="stats-strip">
+            <div class="stat"><span class="stat-icon heart">♥</span><div><small>HEARTS</small><b id="lives-value">20</b></div></div>
+            <div class="stat"><span class="stat-icon coin">◉</span><div><small>NECTAR</small><b id="gold-value">180</b></div></div>
+            <div class="stat"><span class="stat-icon wave">⌁</span><div><small>WAVE</small><b><span id="wave-value">0</span><small class="wave-total"> / 10</small></b></div></div>
+          </div>
+          <div class="panel-divider"></div>
+          <div class="panel-heading"><div><span class="section-kicker">YOUR DEFENSE</span><h2 id="panel-heading">Choose a guardian</h2></div><span class="count-pill" id="tower-count">0 / 12</span></div>
+          <div class="tower-list" id="tower-list">
+            <button class="tower-card selected" data-tower="sprout"><span class="tower-art sprout-art"><span>✳</span></span><span class="tower-info"><b>Sprout turret</b><small>Quick & reliable</small><span class="tower-stats">DAMAGE  <i>8</i> <span>·</span> RANGE  <i>130</i></span></span><span class="tower-cost"><b>60</b><small>NECTAR</small></span></button>
+            <button class="tower-card" data-tower="bloom"><span class="tower-art bloom-art"><span>✿</span></span><span class="tower-info"><b>Bloom cannon</b><small>Heavy splash damage</small><span class="tower-stats">DAMAGE  <i>24</i> <span>·</span> RANGE  <i>105</i></span></span><span class="tower-cost"><b>110</b><small>NECTAR</small></span></button>
+            <button class="tower-card" data-tower="frost"><span class="tower-art frost-art"><span>❋</span></span><span class="tower-info"><b>Frost fern</b><small>Slows the whole pack</small><span class="tower-stats">DAMAGE  <i>4</i> <span>·</span> RANGE  <i>150</i></span></span><span class="tower-cost"><b>90</b><small>NECTAR</small></span></button>
+          </div>
+          <div class="tower-inspector hidden" id="tower-inspector"></div>
+          <div class="panel-divider soft"></div>
+          <div class="wave-card">
+            <div class="wave-card-top"><div><span class="section-kicker">NEXT THREAT</span><h3 id="wave-title">The curious ones</h3></div><span class="threat-icon">♧</span></div>
+            <p id="wave-description">Small, swift, and drawn to the grove's light.</p>
+            <div class="wave-progress"><span id="wave-progress-bar"></span></div>
+            <div class="wave-card-foot"><span id="wave-progress-label">READY WHEN YOU ARE</span><span id="enemy-count">8 UNITS</span></div>
+          </div>
+          <div class="action-row"><button class="secondary-btn" id="pause-btn" title="Pause game">Ⅱ <span>Pause</span></button><button class="primary-btn" id="wave-btn"><span>Begin wave</span><span class="btn-arrow">→</span></button></div>
+          <div class="auto-note"><span>✦</span> Defeat invaders to earn nectar and grow stronger.</div>
+        </aside>
+      </section>
+
+      <section class="editor-view hidden" id="editor-view">
+        <div class="editor-intro"><div><span class="section-kicker">MAKE A LITTLE TROUBLE</span><h2>Design your <em>own</em> wild.</h2><p>Draw a winding route, place the gates, then share it with the grove.</p></div><div class="editor-actions"><button class="secondary-btn" id="clear-map-btn">↺ <span>Reset</span></button><button class="primary-btn" id="save-map-btn"><span>Save map</span><span class="btn-arrow">→</span></button></div></div>
+        <div class="editor-layout"><div class="editor-board-wrap"><div class="editor-board-head"><div><span class="map-pin">⌖</span><b>Untitled meadow</b><small>16 × 10 GRID</small></div><span class="edit-hint"><kbd>Click</kbd> tiles to draw your route</span></div><div class="editor-board"><canvas id="editor-canvas" width="960" height="600" aria-label="Level designer grid"></canvas></div><div class="editor-foot"><span id="path-status">Connect the gate to the grove to make a playable map.</span><span>START <b>◉</b> <span class="foot-sep">—</span> EXIT <b>✦</b></span></div></div>
+          <aside class="editor-tools"><span class="section-kicker">CANVAS TOOLS</span><h3>Shape the path</h3><div class="tool-option active" data-tool="path"><span class="tool-icon path-tool">⌁</span><span><b>Trail brush</b><small>Draw or erase route tiles</small></span><kbd>P</kbd></div><div class="tool-option" data-tool="terrain"><span class="tool-icon terrain-tool">♣</span><span><b>Wild growth</b><small>Block a tile with trees</small></span><kbd>T</kbd></div><div class="tool-rule"></div><label class="field-label" for="map-name">MAP NAME</label><input id="map-name" class="text-field" maxlength="28" value="Untitled meadow" placeholder="Name your map" /><div class="validation-box" id="validation-box"><span>✦</span><div><b>One route, one goal.</b><small>Your path must connect the entrance to the exit.</small></div></div><div class="tool-tip"><span>⌘</span> Tip: build a longer route to give your guardians more time to strike.</div></aside></div>
+      </section>
+
+      <section class="community-view hidden" id="community-view">
+        <div class="community-head"><div><span class="section-kicker">MADE BY THE GROVE</span><h2>Community <em>maps.</em></h2><p>Little worlds made by fellow keepers. Pick a trail and make it yours.</p></div><div class="community-controls"><label class="search-box"><span>⌕</span><input id="map-search" placeholder="Find a map..." /></label><select id="map-sort" class="sort-select"><option value="popular">Most loved</option><option value="newest">Newest</option></select></div></div>
+        <div class="community-grid" id="community-grid"></div>
+        <div class="community-bottom"><span>✦ &nbsp; Every map is a new little adventure.</span><button class="text-link" data-view="editor">Make your own map <b>→</b></button></div>
+      </section>
+    </main>
+    <footer class="site-footer"><span>VERDANT <i>✳</i> A GAME FOR GROWING THINGS</span><span>MADE WITH CARE <b>♡</b></span></footer>
+  </div>
+  <div class="modal-backdrop hidden" id="save-modal"><div class="save-modal"><button class="modal-close" id="close-modal">×</button><span class="section-kicker">A MAP FOR THE GROVE</span><h2>Your wild is ready.</h2><p>Save your map to your journal and add it to the community collection.</p><div class="modal-map-preview"><span>✳</span><div><b id="modal-map-name">Untitled meadow</b><small>YOUR CREATION · PLAYABLE MAP</small></div><span>↗</span></div><div class="modal-buttons"><button class="secondary-btn" id="keep-private">Keep private</button><button class="primary-btn" id="publish-map">Publish map <span class="btn-arrow">→</span></button></div></div></div>
+  <script src="app.js"></script>
+</body>
+</html>
